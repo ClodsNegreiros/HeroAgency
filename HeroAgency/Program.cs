@@ -1,3 +1,12 @@
+using HeroAgency.Application.Commands.SuperHero.CreateHero;
+using HeroAgency.Application.Interfaces.SuperHero;
+using HeroAgency.Application.UseCases;
+using HeroAgency.Application.UseCases.SuperHero.Commands;
+using HeroAgency.Application.UseCases.SuperHero.Queries;
+using HeroAgency.Domain.Interfaces;
+using HeroAgency.Infrastructure.Context;
+using HeroAgency.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace HeroAgency
 {
@@ -8,11 +17,49 @@ namespace HeroAgency
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
+
+            // Add CORS
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngularDevServer",
+                    builder => builder
+                        .WithOrigins("http://localhost:4200")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+            });
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+            // DbContext
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseNpgsql(connectionString));
+
+            // Add Mediator DI
+            builder.Services.AddMediatR(cfg =>
+                cfg.RegisterServicesFromAssemblies(
+                        AppDomain.CurrentDomain.GetAssemblies()
+                    ));
+
+            // UseCase DI
+            builder.Services.AddScoped<ICreateSuperHeroUseCase, CreateSuperHeroUseCase>();
+            builder.Services.AddScoped<IUpdateSuperHeroUseCase, UpdateSuperHeroUseCase>();
+            builder.Services.AddScoped<IDeleteSuperHeroUseCase, DeleteSuperHeroUseCase>();
+            builder.Services.AddScoped<IGetAllSuperHeroUseCase, GetAllSuperHeroUseCase>();
+            builder.Services.AddScoped<IGetSuperHeroByIdUseCase, GetSuperHeroByIdUseCase>();
+            
+            
+            builder.Services.AddScoped<IGetAllSuperPowerUseCase, GetAllSuperPowerUseCase>();
+
+            // Repository DI
+            builder.Services.AddScoped<ISuperHeroRepository, SuperHeroRepository>();
+            builder.Services.AddScoped<ISuperHeroPowerRepository, SuperHeroPowerRepository>();
+            builder.Services.AddScoped<ISuperPowerRepository, SuperPowerRepository>();
 
             var app = builder.Build();
 
@@ -25,8 +72,10 @@ namespace HeroAgency
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            // Use CORS
+            app.UseCors("AllowAngularDevServer");
 
+            app.UseAuthorization();
 
             app.MapControllers();
 

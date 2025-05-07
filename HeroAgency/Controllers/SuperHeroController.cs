@@ -15,7 +15,7 @@ namespace HeroAgency.API.Controllers
         {
             var result = await useCase.Execute(request);
 
-            return Ok(result);
+            return StatusCode((int)result.Type, result.ToJson());
         }
 
         [HttpPut("{id}")]

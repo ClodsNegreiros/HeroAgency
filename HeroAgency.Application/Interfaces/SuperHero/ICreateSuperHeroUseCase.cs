@@ -1,9 +1,10 @@
-﻿using HeroAgency.Application.Requests.SuperHero;
+﻿using HeroAgency.Application.Commands.SuperHero.CreateSuperHero;
+using HeroAgency.Application.Requests.SuperHero;
 
 namespace HeroAgency.Application.Interfaces.SuperHero
 {
     public interface ICreateSuperHeroUseCase
     {
-        Task<Domain.Entities.SuperHero> Execute(CreateSuperHeroRequest request);
+        Task<CreateSuperHeroCommandResult> Execute(CreateSuperHeroRequest request);
     }
 }

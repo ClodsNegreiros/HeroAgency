@@ -1,10 +1,10 @@
-﻿using HeroAgency.Domain.Interfaces;
+﻿using HeroAgency.Application.Commands.SuperHero.CreateSuperHero;
+using HeroAgency.Domain.Interfaces;
 using MediatR;
-using System.Data;
 
 namespace HeroAgency.Application.Commands.SuperHero.CreateHero
 {
-    public class CreateSuperHeroHandler : IRequestHandler<CreateSuperHeroCommand, Domain.Entities.SuperHero>
+    public class CreateSuperHeroHandler : IRequestHandler<CreateSuperHeroCommand, CreateSuperHeroCommandResult>
     {
         private readonly ISuperHeroRepository _repository;
 
@@ -13,18 +13,26 @@ namespace HeroAgency.Application.Commands.SuperHero.CreateHero
             _repository = repository;
         }
 
-        public async Task<Domain.Entities.SuperHero> Handle(CreateSuperHeroCommand command, CancellationToken cancellationToken)
+        public async Task<CreateSuperHeroCommandResult> Handle(CreateSuperHeroCommand command, CancellationToken cancellationToken)
         {
-            var existingHeroWithHeroName = await _repository.GetByHeroName(command.Request.HeroName);
-
-            if (existingHeroWithHeroName != null)
+            try
             {
-                throw new DuplicateNameException($"Herói com nome de Herói {command.Request.HeroName} já cadastrado. Tente novamente com outro.");
-            }
+                var existingHeroWithHeroName = await _repository.GetByHeroName(command.Request.HeroName);
 
-            var superHero = ToModel(command);
-         
-            return await _repository.CreateAsync(superHero);
+                if (existingHeroWithHeroName != null)
+                {
+                    return CreateSuperHeroCommandResult.Conflict($"Herói com nome de Herói {command.Request.HeroName} já cadastrado. Tente novamente com outro.");
+                }
+
+                var superHero = ToModel(command);
+                var createdSuperHero = await _repository.CreateAsync(superHero);
+
+                return CreateSuperHeroCommandResult.Success(createdSuperHero);
+            }
+            catch (Exception ex) 
+            {
+                return CreateSuperHeroCommandResult.InternalError($"Erro ao cadastrar Herói: {ex.Message}");
+            }
         }
 
         private Domain.Entities.SuperHero ToModel(CreateSuperHeroCommand command)

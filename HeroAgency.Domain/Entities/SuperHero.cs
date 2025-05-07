@@ -18,5 +18,19 @@
             Height = height;
             Weight = weight;
         }
+
+        public dynamic ToJson()
+        {
+            return new
+            {
+                Id,
+                Name,
+                HeroName,
+                BirthDate,
+                Height,
+                Weight,
+                SuperHeroPower = SuperHeroPowers.Select(shp => shp.SuperPowerId)
+            };
+        }
     }
 }

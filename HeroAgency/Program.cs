@@ -1,3 +1,5 @@
+using HeroAgency.Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace HeroAgency
 {
@@ -14,6 +16,12 @@ namespace HeroAgency
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+
+            // DbContext
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(connectionString));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

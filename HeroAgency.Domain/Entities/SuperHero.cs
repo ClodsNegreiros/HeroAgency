@@ -8,5 +8,7 @@
         public DateTime BirthDate { get; set; }
         public decimal Height { get; set; }
         public decimal Weight { get; set; }
+
+        public List<SuperHeroPower> SuperHeroPowers { get; set; }
     }
 }

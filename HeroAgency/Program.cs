@@ -1,4 +1,10 @@
+using HeroAgency.Application.Commands.SuperHero.CreateHero;
+using HeroAgency.Application.Interfaces.SuperHero;
+using HeroAgency.Application.UseCases;
+using HeroAgency.Application.UseCases.SuperHero.Commands;
+using HeroAgency.Domain.Interfaces;
 using HeroAgency.Infrastructure.Context;
+using HeroAgency.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace HeroAgency
@@ -18,10 +24,23 @@ namespace HeroAgency
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-
             // DbContext
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
+
+
+            // Add Mediator DI
+            builder.Services.AddMediatR(cfg =>
+                cfg.RegisterServicesFromAssemblies(
+                        AppDomain.CurrentDomain.GetAssemblies()
+                    ));
+
+            // UseCase DI
+            builder.Services.AddScoped<ICreateSuperHeroUseCase, CreateSuperHeroUseCase>();
+
+            // Repository DI
+            builder.Services.AddScoped<ISuperHeroRepository, SuperHeroRepository>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

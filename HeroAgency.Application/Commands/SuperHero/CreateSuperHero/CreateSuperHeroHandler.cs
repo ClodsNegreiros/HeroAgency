@@ -1,5 +1,6 @@
 ﻿using HeroAgency.Domain.Interfaces;
 using MediatR;
+using System.Data;
 
 namespace HeroAgency.Application.Commands.SuperHero.CreateHero
 {
@@ -14,6 +15,13 @@ namespace HeroAgency.Application.Commands.SuperHero.CreateHero
 
         public async Task<Domain.Entities.SuperHero> Handle(CreateSuperHeroCommand command, CancellationToken cancellationToken)
         {
+            var existingHeroWithHeroName = await _repository.GetByHeroName(command.Request.HeroName);
+
+            if (existingHeroWithHeroName != null)
+            {
+                throw new DuplicateNameException($"Herói com nome de Herói {command.Request.HeroName} já cadastrado. Tente novamente com outro.");
+            }
+
             var superHero = ToModel(command);
          
             return await _repository.CreateAsync(superHero);

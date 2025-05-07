@@ -1,5 +1,6 @@
 ﻿using HeroAgency.Domain.Interfaces;
 using MediatR;
+using System.Data;
 
 namespace HeroAgency.Application.Commands.SuperHero.CreateHero
 {
@@ -14,13 +15,20 @@ namespace HeroAgency.Application.Commands.SuperHero.CreateHero
 
         public async Task<Domain.Entities.SuperHero> Handle(UpdateSuperHeroCommand command, CancellationToken cancellationToken)
         {
-            var existingSuperHero = _repository.GetById(command.Id);
+            var existingSuperHero = await _repository.GetById(command.Id);
             if (existingSuperHero == null)
             {
                 throw new KeyNotFoundException($"Herói com Id {command.Id} não encontrado.");
             }
 
-            var superHeroToUpdate = ToUpdate(existingSuperHero.Result!, command);
+            var existingHeroWithHeroName = await _repository.GetByHeroName(command.Request.HeroName);
+
+            if (existingHeroWithHeroName != null)
+            {
+                throw new DuplicateNameException($"Herói com nome de Herói {command.Request.HeroName} já cadastrado. Tente novamente com outro.");
+            }
+
+            var superHeroToUpdate = ToUpdate(existingSuperHero, command);
 
             return await _repository.UpdateAsync(superHeroToUpdate);
         }

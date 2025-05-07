@@ -34,7 +34,7 @@ namespace HeroAgency.Application.Commands.SuperHero.CreateSuperHero
                     IsSuccess,
                     Message,
                     Type,
-                    Model
+                    Model = Model.ToJson()
                 };
             }
 

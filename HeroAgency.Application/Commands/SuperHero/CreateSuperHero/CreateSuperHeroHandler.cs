@@ -1,4 +1,5 @@
 ﻿using HeroAgency.Application.Commands.SuperHero.CreateSuperHero;
+using HeroAgency.Domain.Entities;
 using HeroAgency.Domain.Interfaces;
 using MediatR;
 
@@ -7,10 +8,12 @@ namespace HeroAgency.Application.Commands.SuperHero.CreateHero
     public class CreateSuperHeroHandler : IRequestHandler<CreateSuperHeroCommand, CreateSuperHeroCommandResult>
     {
         private readonly ISuperHeroRepository _repository;
+        private readonly ISuperHeroPowerRepository _superHeroPowerRepository;
 
-        public CreateSuperHeroHandler(ISuperHeroRepository repository)
+        public CreateSuperHeroHandler(ISuperHeroRepository repository, ISuperHeroPowerRepository superHeroPowerRepository)
         {
             _repository = repository;
+            _superHeroPowerRepository = superHeroPowerRepository;
         }
 
         public async Task<CreateSuperHeroCommandResult> Handle(CreateSuperHeroCommand command, CancellationToken cancellationToken)
@@ -27,6 +30,9 @@ namespace HeroAgency.Application.Commands.SuperHero.CreateHero
                 var superHero = ToModel(command);
                 var createdSuperHero = await _repository.CreateAsync(superHero);
 
+                // Cria as associações com os poderes
+                await CreateSuperHeroPowersAsync(createdSuperHero.Id, command.Request.SuperHeroPowersIds);
+
                 return CreateSuperHeroCommandResult.Success(createdSuperHero);
             }
             catch (Exception ex) 
@@ -38,6 +44,23 @@ namespace HeroAgency.Application.Commands.SuperHero.CreateHero
         private Domain.Entities.SuperHero ToModel(CreateSuperHeroCommand command)
         {
             return new Domain.Entities.SuperHero(command.Request.Name, command.Request.HeroName, command.Request.BirthDate, command.Request.Height, command.Request.Weight);
+        }
+
+        private async Task CreateSuperHeroPowersAsync(int superHeroId, List<int> powerIds)
+        {
+            if (powerIds == null || !powerIds.Any())
+                return;
+
+            foreach (var powerId in powerIds)
+            {
+                var superHeroPower = new SuperHeroPower
+                {
+                    SuperHeroId = superHeroId,
+                    SuperPowerId = powerId
+                };
+
+                await _superHeroPowerRepository.CreateAsync(superHeroPower);
+            }
         }
     }
 }

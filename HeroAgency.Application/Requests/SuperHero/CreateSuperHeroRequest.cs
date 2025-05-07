@@ -1,6 +1,4 @@
-﻿using HeroAgency.Domain.Entities;
-
-namespace HeroAgency.Application.Requests.SuperHero
+﻿namespace HeroAgency.Application.Requests.SuperHero
 {
     public class CreateSuperHeroRequest
     {
@@ -10,6 +8,6 @@ namespace HeroAgency.Application.Requests.SuperHero
         public decimal Height { get; set; }
         public decimal Weight { get; set; }
 
-        //public List<SuperHeroPower> SuperHeroPowers { get; set; }
+        public List<int> SuperHeroPowersIds { get; set; }
     }
 }

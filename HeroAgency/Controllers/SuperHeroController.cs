@@ -37,5 +37,13 @@ namespace HeroAgency.API.Controllers
             var result = await useCase.Execute(id);
             return Ok(result);
         }
+
+        [HttpGet()]
+        public async Task<IActionResult> GetAll(
+            [FromServices] IGetAllSuperHeroUseCase useCase)
+        {
+            var result = await useCase.Execute();
+            return Ok(result);
+        }
     }
 }

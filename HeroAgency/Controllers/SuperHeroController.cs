@@ -54,7 +54,8 @@ namespace HeroAgency.API.Controllers
             [FromServices] IGetSuperHeroByIdUseCase useCase)
         {
             var result = await useCase.Execute(id);
-            return Ok(result);
+
+            return StatusCode((int)result.Type, result.ToJson());
         }
     }
 }

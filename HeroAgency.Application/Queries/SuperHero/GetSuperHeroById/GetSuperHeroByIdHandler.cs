@@ -1,9 +1,10 @@
-﻿using HeroAgency.Domain.Interfaces;
+﻿using HeroAgency.Application.Commands.SuperHero.CreateSuperHero;
+using HeroAgency.Domain.Interfaces;
 using MediatR;
 
 namespace HeroAgency.Application.Queries.SuperHero.GetAllSuperHero
 {
-    public class GetSuperHeroByIdHandler : IRequestHandler<GetSuperHeroByIdQuery, Domain.Entities.SuperHero?>
+    public class GetSuperHeroByIdHandler : IRequestHandler<GetSuperHeroByIdQuery, GetSuperHeroByIdQueryResult>
     {
         private readonly ISuperHeroRepository _repository;
         
@@ -12,9 +13,22 @@ namespace HeroAgency.Application.Queries.SuperHero.GetAllSuperHero
             _repository = repository;
         }
 
-        public async Task<Domain.Entities.SuperHero?> Handle(GetSuperHeroByIdQuery query, CancellationToken cancellationToken)
+        public async Task<GetSuperHeroByIdQueryResult> Handle(GetSuperHeroByIdQuery query, CancellationToken cancellationToken)
         {
-            return await _repository.GetById(query.Id);
+            try
+            {
+                var existingSuperHero = await _repository.GetById(query.Id);
+                if (existingSuperHero == null)
+                {
+                    return GetSuperHeroByIdQueryResult.NotFound($"Herói com Id {query.Id} não encontrado.");
+                }
+
+                return GetSuperHeroByIdQueryResult.Success(existingSuperHero);
+            }
+            catch (Exception ex) 
+            {
+                return GetSuperHeroByIdQueryResult.InternalError($"Ocorreu um erro ao tentar buscar o Super Herói: {ex.Message}");
+            }    
         }
     }
 }

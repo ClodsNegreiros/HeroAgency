@@ -1,8 +1,10 @@
 ﻿
+using HeroAgency.Application.Commands.SuperHero.CreateSuperHero;
+
 namespace HeroAgency.Application.Interfaces.SuperHero
 {
     public interface IGetSuperHeroByIdUseCase
     {
-        Task<Domain.Entities.SuperHero?> Execute(int id);
+        Task<GetSuperHeroByIdQueryResult> Execute(int id);
     }
 }

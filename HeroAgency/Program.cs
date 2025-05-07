@@ -45,6 +45,7 @@ namespace HeroAgency
 
             // Repository DI
             builder.Services.AddScoped<ISuperHeroRepository, SuperHeroRepository>();
+            builder.Services.AddScoped<ISuperHeroPowerRepository, SuperHeroPowerRepository>();
 
             var app = builder.Build();
 

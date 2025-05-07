@@ -29,7 +29,7 @@ namespace HeroAgency.Application.Commands.SuperHero.CreateHero
             }
             catch (Exception ex) 
             {
-                return DeleteSuperHeroCommandResult.InternalError($"Erro ao deletar Super Herói: ${ex.Message}");
+                return DeleteSuperHeroCommandResult.InternalError($"Erro ao deletar Super Herói: {ex.Message}");
             }
         }
     }

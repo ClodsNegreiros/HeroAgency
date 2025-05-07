@@ -36,7 +36,7 @@ namespace HeroAgency.Application.Commands.SuperHero.CreateHero
                 return UpdateSuperHeroCommandResult.Success(updatedSuperHero);
             } catch(Exception ex)
             {
-                return UpdateSuperHeroCommandResult.InternalError($"Ocorreu um erro ao atualizar Herói: ${ex.Message}");
+                return UpdateSuperHeroCommandResult.InternalError($"Ocorreu um erro ao atualizar Herói: {ex.Message}");
             }
         }
 

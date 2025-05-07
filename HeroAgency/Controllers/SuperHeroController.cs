@@ -49,7 +49,7 @@ namespace HeroAgency.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAll(
+        public async Task<IActionResult> GetById(
             [FromRoute] int id,
             [FromServices] IGetSuperHeroByIdUseCase useCase)
         {

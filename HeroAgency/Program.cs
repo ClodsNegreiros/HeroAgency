@@ -38,6 +38,7 @@ namespace HeroAgency
             // UseCase DI
             builder.Services.AddScoped<ICreateSuperHeroUseCase, CreateSuperHeroUseCase>();
             builder.Services.AddScoped<IUpdateSuperHeroUseCase, UpdateSuperHeroUseCase>();
+            builder.Services.AddScoped<IDeleteSuperHeroUseCase, DeleteSuperHeroUseCase>();
 
             // Repository DI
             builder.Services.AddScoped<ISuperHeroRepository, SuperHeroRepository>();

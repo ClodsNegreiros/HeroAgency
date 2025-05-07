@@ -14,13 +14,13 @@ namespace HeroAgency.Application.Commands.SuperHero.CreateHero
 
         public async Task<bool> Handle(DeleteSuperHeroCommand command, CancellationToken cancellationToken)
         {
-            var existingSuperHero = _repository.GetById(command.Id);
+            var existingSuperHero = await _repository.GetById(command.Id);
             if (existingSuperHero == null)
             {
                 throw new KeyNotFoundException($"Herói com Id {command.Id} não encontrado.");
             }
 
-            return await _repository.DeleteAsync(existingSuperHero.Result!);
+            return await _repository.DeleteAsync(existingSuperHero);
         }
     }
 }

@@ -52,10 +52,14 @@ namespace HeroAgency
             builder.Services.AddScoped<IDeleteSuperHeroUseCase, DeleteSuperHeroUseCase>();
             builder.Services.AddScoped<IGetAllSuperHeroUseCase, GetAllSuperHeroUseCase>();
             builder.Services.AddScoped<IGetSuperHeroByIdUseCase, GetSuperHeroByIdUseCase>();
+            
+            
+            builder.Services.AddScoped<IGetAllSuperPowerUseCase, GetAllSuperPowerUseCase>();
 
             // Repository DI
             builder.Services.AddScoped<ISuperHeroRepository, SuperHeroRepository>();
             builder.Services.AddScoped<ISuperHeroPowerRepository, SuperHeroPowerRepository>();
+            builder.Services.AddScoped<ISuperPowerRepository, SuperPowerRepository>();
 
             var app = builder.Build();
 

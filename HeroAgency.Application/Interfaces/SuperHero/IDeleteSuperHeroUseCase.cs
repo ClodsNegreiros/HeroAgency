@@ -1,9 +1,9 @@
-﻿using HeroAgency.Application.Requests.SuperHero;
+﻿using HeroAgency.Application.Commands.SuperHero.CreateSuperHero;
 
 namespace HeroAgency.Application.Interfaces.SuperHero
 {
     public interface IDeleteSuperHeroUseCase
     {
-        Task<bool> Execute(int id);
+        Task<DeleteSuperHeroCommandResult> Execute(int id);
     }
 }

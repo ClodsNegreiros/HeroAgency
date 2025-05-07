@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using HeroAgency.Application.Commands.SuperHero.CreateSuperHero;
+using MediatR;
 
 namespace HeroAgency.Application.Commands.SuperHero.CreateHero
 {
-    public class DeleteSuperHeroCommand : IRequest<bool>
+    public class DeleteSuperHeroCommand : IRequest<DeleteSuperHeroCommandResult>
     {
         public int Id { get; set; }
 

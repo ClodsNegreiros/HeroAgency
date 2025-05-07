@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HeroAgency.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace HeroAgency.Infrastructure.Context
 {
@@ -6,10 +7,11 @@ namespace HeroAgency.Infrastructure.Context
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         { }
-            
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         }
-}
+    }
 }

@@ -2,6 +2,7 @@ using HeroAgency.Application.Commands.SuperHero.CreateHero;
 using HeroAgency.Application.Interfaces.SuperHero;
 using HeroAgency.Application.UseCases;
 using HeroAgency.Application.UseCases.SuperHero.Commands;
+using HeroAgency.Application.UseCases.SuperHero.Queries;
 using HeroAgency.Domain.Interfaces;
 using HeroAgency.Infrastructure.Context;
 using HeroAgency.Infrastructure.Repositories;
@@ -39,6 +40,7 @@ namespace HeroAgency
             builder.Services.AddScoped<ICreateSuperHeroUseCase, CreateSuperHeroUseCase>();
             builder.Services.AddScoped<IUpdateSuperHeroUseCase, UpdateSuperHeroUseCase>();
             builder.Services.AddScoped<IDeleteSuperHeroUseCase, DeleteSuperHeroUseCase>();
+            builder.Services.AddScoped<IGetAllSuperHeroUseCase, GetAllSuperHeroUseCase>();
 
             // Repository DI
             builder.Services.AddScoped<ISuperHeroRepository, SuperHeroRepository>();

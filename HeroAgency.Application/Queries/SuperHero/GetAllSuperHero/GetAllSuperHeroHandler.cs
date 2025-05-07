@@ -1,9 +1,10 @@
-﻿using HeroAgency.Domain.Interfaces;
+﻿using HeroAgency.Application.Commands.SuperHero.CreateSuperHero;
+using HeroAgency.Domain.Interfaces;
 using MediatR;
 
 namespace HeroAgency.Application.Queries.SuperHero.GetAllSuperHero
 {
-    public class GetAllSuperHeroHandler : IRequestHandler<GetAllSuperHeroQuery, List<Domain.Entities.SuperHero>>
+    public class GetAllSuperHeroHandler : IRequestHandler<GetAllSuperHeroQuery, GetAllSuperHeroQueryResult>
     {
         private readonly ISuperHeroRepository _repository;
         
@@ -12,9 +13,17 @@ namespace HeroAgency.Application.Queries.SuperHero.GetAllSuperHero
             _repository = repository;
         }
 
-        public async Task<List<Domain.Entities.SuperHero>> Handle(GetAllSuperHeroQuery request, CancellationToken cancellationToken)
+        public async Task<GetAllSuperHeroQueryResult> Handle(GetAllSuperHeroQuery request, CancellationToken cancellationToken)
         {
-            return await _repository.GetAll();
+            try
+            {
+                var superHeroes = await _repository.GetAll();
+
+                return GetAllSuperHeroQueryResult.Success(superHeroes);
+            } catch(Exception ex)
+            {
+                return GetAllSuperHeroQueryResult.InternalError($"Ocorreu um erro ao retornar a lista de Super Heróis: {ex.Message}");
+            } 
         }
     }
 }

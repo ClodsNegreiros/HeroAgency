@@ -1,4 +1,5 @@
-﻿using HeroAgency.Application.Interfaces.SuperHero;
+﻿using HeroAgency.Application.Commands.SuperHero.CreateSuperHero;
+using HeroAgency.Application.Interfaces.SuperHero;
 using HeroAgency.Application.Queries.SuperHero.GetAllSuperHero;
 using MediatR;
 
@@ -10,7 +11,7 @@ namespace HeroAgency.Application.UseCases.SuperHero.Queries
         {
         }
 
-        public async Task<List<Domain.Entities.SuperHero>> Execute()
+        public async Task<GetAllSuperHeroQueryResult> Execute()
         {
             return await mediator.Send(new GetAllSuperHeroQuery());
         }

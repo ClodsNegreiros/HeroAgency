@@ -17,5 +17,16 @@ namespace HeroAgency.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(
+            [FromRoute] int id,
+            [FromBody] UpdateSuperHeroRequest request,
+            [FromServices] IUpdateSuperHeroUseCase useCase)
+        {
+            var result = await useCase.Execute(id, request);
+
+            return Ok(result);
+        }
     }
 }

@@ -1,9 +1,10 @@
-﻿using HeroAgency.Application.Requests.SuperHero;
+﻿using HeroAgency.Application.Commands.SuperHero.CreateSuperHero;
+using HeroAgency.Application.Requests.SuperHero;
 using MediatR;
 
 namespace HeroAgency.Application.Commands.SuperHero.CreateHero
 {
-    public class UpdateSuperHeroCommand : IRequest<Domain.Entities.SuperHero>
+    public class UpdateSuperHeroCommand : IRequest<UpdateSuperHeroCommandResult>
     {
         public int Id { get; set; }
         public UpdateSuperHeroRequest Request { get; set; }

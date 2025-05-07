@@ -26,7 +26,7 @@ namespace HeroAgency.API.Controllers
         {
             var result = await useCase.Execute(id, request);
 
-            return Ok(result);
+            return StatusCode((int)result.Type, result.ToJson());
         }
 
         [HttpDelete("{id}")]

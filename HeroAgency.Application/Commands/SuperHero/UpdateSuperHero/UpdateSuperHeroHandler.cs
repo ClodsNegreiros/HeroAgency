@@ -1,10 +1,10 @@
-﻿using HeroAgency.Domain.Interfaces;
+﻿using HeroAgency.Application.Commands.SuperHero.CreateSuperHero;
+using HeroAgency.Domain.Interfaces;
 using MediatR;
-using System.Data;
 
 namespace HeroAgency.Application.Commands.SuperHero.CreateHero
 {
-    public class UpdateSuperHeroHandler : IRequestHandler<UpdateSuperHeroCommand, Domain.Entities.SuperHero>
+    public class UpdateSuperHeroHandler : IRequestHandler<UpdateSuperHeroCommand, UpdateSuperHeroCommandResult>
     {
         private readonly ISuperHeroRepository _repository;
 
@@ -13,24 +13,31 @@ namespace HeroAgency.Application.Commands.SuperHero.CreateHero
             _repository = repository;
         }
 
-        public async Task<Domain.Entities.SuperHero> Handle(UpdateSuperHeroCommand command, CancellationToken cancellationToken)
+        public async Task<UpdateSuperHeroCommandResult> Handle(UpdateSuperHeroCommand command, CancellationToken cancellationToken)
         {
-            var existingSuperHero = await _repository.GetById(command.Id);
-            if (existingSuperHero == null)
+            try
             {
-                throw new KeyNotFoundException($"Herói com Id {command.Id} não encontrado.");
-            }
+                var existingSuperHero = await _repository.GetById(command.Id);
+                if (existingSuperHero == null)
+                {
+                    return UpdateSuperHeroCommandResult.NotFound($"Herói com Id {command.Id} não encontrado.");
+                }
 
-            var existingHeroWithHeroName = await _repository.GetByHeroName(command.Request.HeroName);
+                var existingHeroWithHeroName = await _repository.GetByHeroName(command.Request.HeroName);
 
-            if (existingHeroWithHeroName != null)
+                if (existingHeroWithHeroName != null)
+                {
+                    return UpdateSuperHeroCommandResult.Conflict($"Herói com nome de Herói {command.Request.HeroName} já cadastrado. Tente novamente com outro.");
+                }
+
+                var superHeroToUpdate = ToUpdate(existingSuperHero!, command);
+                var updatedSuperHero = await _repository.UpdateAsync(superHeroToUpdate);
+
+                return UpdateSuperHeroCommandResult.Success(updatedSuperHero);
+            } catch(Exception ex)
             {
-                throw new DuplicateNameException($"Herói com nome de Herói {command.Request.HeroName} já cadastrado. Tente novamente com outro.");
+                return UpdateSuperHeroCommandResult.InternalError($"Ocorreu um erro ao atualizar Herói: ${ex.Message}");
             }
-
-            var superHeroToUpdate = ToUpdate(existingSuperHero, command);
-
-            return await _repository.UpdateAsync(superHeroToUpdate);
         }
 
 

@@ -49,5 +49,11 @@ namespace HeroAgency.Infrastructure.Repositories
 
             return true;
         }
+
+        public async Task<SuperHero?> GetByHeroName(string heroName)
+        {
+            return await _context.SuperHeroes
+                .SingleOrDefaultAsync(sh => EF.Functions.ILike(sh.HeroName, heroName));
+        }
     }
 }
